@@ -1,110 +1,79 @@
-import os
 import requests
 
+def optimize_code(code, analysis):
+    prompt = f"""
+You are an expert Python code optimization system.
 
-def build_prompt(code, analysis):
-    return f"""
-You are an expert Python code optimizer.
+Your task is to optimize the user's Python code while preserving EXACTLY the same behavior and output.
 
-Analyze the following Python code and optimize it without changing its output or functionality.
-
-Analysis:
-Functions: {analysis.get("functions", 0)}
-Loops: {analysis.get("loops", 0)}
-Conditions: {analysis.get("conditions", 0)}
-
-Original Code:
+ORIGINAL PYTHON CODE:
 {code}
 
-Your response MUST contain:
+CODE ANALYSIS:
+{analysis}
+
+Follow these rules strictly:
+
+1. Analyze the original code.
+2. Identify possible performance or readability improvements.
+3. Preserve the exact functionality and output.
+4. The optimized code MUST be a COMPLETE, STANDALONE Python program.
+5. Include ALL required variables, imports, functions, and input data from the original code.
+6. Do NOT remove variables that are required by the optimized code.
+7. Do NOT assume that any variable exists outside the optimized code.
+8. The optimized code must run independently using Python.
+9. Do not use explanations inside the optimized code.
+10. Return the optimized code ONLY between OPTIMIZED_CODE_START and OPTIMIZED_CODE_END.
+
+Use EXACTLY this format:
+
+PROBLEMS:
+
+* Problem 1
+* Problem 2
+
+TIME_COMPLEXITY:
+O(...)
+
+SPACE_COMPLEXITY:
+O(...)
 
 OPTIMIZED_CODE_START
-<only the optimized Python code>
+<complete standalone Python code>
 OPTIMIZED_CODE_END
 
-EXPLANATION
-<short explanation>
+EXPLANATION:
+Explain the optimization.
 
-Do not put any text inside OPTIMIZED_CODE_START and OPTIMIZED_CODE_END except valid Python code.
+IMPORTANT:
+The code between OPTIMIZED_CODE_START and OPTIMIZED_CODE_END must be directly executable Python code.
+Do not put Markdown `python or ` inside the markers.
+Do not omit original variable definitions.
 """
 
-
-def optimize_with_ollama(prompt):
-    url = os.getenv(
-        "OLLAMA_URL",
-        "http://127.0.0.1:11434/api/generate"
-    )
-
-    model = os.getenv(
-        "OLLAMA_MODEL",
-        "qwen2.5-coder:7b"
-    )
-
-    response = requests.post(
-        url,
-        json={
-            "model": model,
-            "prompt": prompt,
-            "stream": False,
-            "temperature": 0.1
-        },
-        timeout=300
-    )
-
-    response.raise_for_status()
-
-    data = response.json()
-    return data.get("response", "")
-
-
-def optimize_with_openrouter(prompt):
-    api_key = os.getenv("OPENROUTER_API_KEY")
-
-    if not api_key:
-        raise Exception(
-            "OPENROUTER_API_KEY is not configured."
+    try:
+        response = requests.post(
+            "http://127.0.0.1:11434/api/generate",
+            json={
+                "model": "qwen2.5-coder:7b",
+                "prompt": prompt,
+                "stream": False
+            },
+            timeout=300
         )
 
-    model = os.getenv(
-        "OPENROUTER_MODEL",
-        "qwen/qwen-2.5-coder-32b-instruct"
-    )
+        response.raise_for_status()
+        data = response.json()
+        return data["response"]
 
-    response = requests.post(
-        "https://openrouter.ai/api/v1/chat/completions",
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-        },
-        json={
-            "model": model,
-            "messages": [
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            "temperature": 0.1
-        },
-        timeout=300
-    )
+    except requests.exceptions.Timeout:
+        return "Error: Ollama took too long to respond."
 
-    response.raise_for_status()
+    except requests.exceptions.ConnectionError:
+        return "Error: Cannot connect to Ollama. Make sure Ollama is running."
 
-    data = response.json()
-
-    return data["choices"][0]["message"]["content"]
-
-
-def optimize_code(code, analysis):
-    prompt = build_prompt(code, analysis)
-
-    ai_mode = os.getenv("AI_MODE", "local").lower()
-
-    if ai_mode == "online":
-        return optimize_with_openrouter(prompt)
-
-    return optimize_with_ollama(prompt)
+    except Exception as e:
+        return f"Error: {e}"
 
 
 
