@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Smart Code Optimizer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="grid"></div><div class="glow g1"></div><div class="glow g2"></div>
+
+<header>
+  <a class="brand"><span class="logo">✦</span><span><b>SMART CODE</b><small>OPTIMIZER</small></span></a>
+  <div class="status"><i></i> LOCAL AI ENGINE <strong>READY</strong></div>
+</header>
+
+<main>
+<section class="hero">
+  <div>
+    <label>✦ AI-POWERED CODE INTELLIGENCE</label>
+    <h1>Make your code<br><em>smarter.</em></h1>
+    <p>Analyze, optimize, validate and benchmark Python code using a local LLM-powered pipeline.</p>
+    <div class="chips"><span>Python</span><span>Qwen2.5-Coder</span><span>LLM</span><span>Local AI</span></div>
+  </div>
+  <div class="core-wrap">
+    <div class="orbit o1"></div><div class="orbit o2"></div><div class="orbit o3"></div>
+    <div class="core"><b>AI</b><small>PROCESSOR</small></div>
+  </div>
+</section>
+
+<section class="workspace">
+<article class="card">
+  <div class="head"><div><b>01 &nbsp; SOURCE CODE</b><small>Python input</small></div><span>PYTHON</span></div>
+  <div class="editor"><div class="bar"><i></i><i></i><i></i> main.py</div><div class="editrow"><div id="nums"></div><textarea id="input">numbers = [1, 2, 3, 4, 5]
+
+result = []
+
+for i in range(len(numbers)):
+    result.append(numbers[i] * 2)
+
+print(result)</textarea></div></div>
+  <div class="buttons"><button id="run">⚡ OPTIMIZE WITH AI →</button><button id="clear">CLEAR</button></div>
+</article>
+
+<article class="card">
+  <div class="head"><div><b>02 &nbsp; AI OPTIMIZED OUTPUT</b><small>Generated result</small></div><span id="valid" class="waiting">● WAITING</span></div>
+  <div class="output"><div class="bar">optimized.py <b>AI OUTPUT</b></div><pre id="out">Your optimized code will appear here...</pre></div>
+  <div class="metrics">
+    <div><small>FUNCTIONS</small><b id="f">0</b></div>
+    <div><small>LOOPS</small><b id="l">0</b></div>
+    <div><small>CONDITIONS</small><b id="c">0</b></div>
+    <div><small>SPEED GAIN</small><b id="gain">—</b></div>
+  </div>
+</article>
+</section>
+
+<section class="pipeline card">
+<h3>AI OPTIMIZATION PIPELINE <small>END-TO-END ANALYSIS</small></h3>
+<div class="flow">
+<div><strong>01</strong><b>ANALYZE</b><small>Understand code</small></div><i>→</i>
+<div><strong>02</strong><b>OPTIMIZE</b><small>Generate improvements</small></div><i>→</i>
+<div><strong>03</strong><b>VALIDATE</b><small>Verify behavior</small></div><i>→</i>
+<div><strong>04</strong><b>BENCHMARK</b><small>Measure runtime</small></div>
+</div>
+</section>
+</main>
+
+<footer>SMART CODE OPTIMIZER <span>AI • LLM • PYTHON • SOFTWARE OPTIMIZATION</span></footer>
+<div id="toast"></div>
+<script src="script.js"></script>
+</body>
+</html>
